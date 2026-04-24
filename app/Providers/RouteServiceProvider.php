@@ -44,5 +44,10 @@ class RouteServiceProvider extends ServiceProvider
         RateLimiter::for('api', function (Request $request) {
             return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
         });
+
+         // Redirect berdasarkan role
+        \Illuminate\Support\Facades\Auth::user()?->user_group === 'admin'
+        ? redirect('/admin') //jika admin maka dilempar ke /admin
+        : redirect('/depan'); //jika customer maka di lempar ke /depana
     }
 }

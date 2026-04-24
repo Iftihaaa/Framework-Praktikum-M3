@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 class Barang extends Model
 {
     use HasFactory;
+
     protected $table = 'barang'; // Nama tabel eksplisit
 
     protected $guarded = [];
@@ -39,5 +40,17 @@ class Barang extends Model
     {
         // Hapus koma (,) dari nilai sebelum menyimpannya ke database
         $this->attributes['harga_barang'] = str_replace('.', '', $value);
+    }
+
+    // Relasi dengan tabel relasi many to many nya
+    public function penjualanBarang()
+    {
+        return $this->hasMany(PenjualanBarang::class, 'barang_id');
+    }
+
+    // Relasi dengan tabel relasi many to many nya
+    public function pembelianBarang()
+    {
+        return $this->hasMany(PembelianBarang::class, 'barang_id');
     }
 }
