@@ -134,6 +134,16 @@ class PembelianResource extends Resource
                                         ->dehydrated(true)
                                         ->columnSpan(['md' => 1]),
 
+                                    FileUpload::make('foto_baru')
+                                        ->label('Foto Barang')
+                                        ->image()
+                                        ->directory('foto')
+                                        ->acceptedFileTypes(['image/*'])
+                                        ->maxSize(2048)
+                                        ->hidden(fn ($get) => $get('is_barang_baru') !== '1')
+                                        ->dehydrated(true)
+                                        ->columnSpan(['md' => 2]),
+
                                     // === HARGA & JUMLAH ===
                                     TextInput::make('harga_beli')
                                         ->label('Harga Beli')
@@ -180,7 +190,7 @@ class PembelianResource extends Resource
                                             'harga_barang' => $data['harga_beli'],
                                             'stok'         => $data['jml'],
                                             'rating'       => $data['rating_baru'] ?? 0,
-                                            'foto'         => 'default.png',
+                                            'foto'         => $data['foto_baru'] ?? 'default.png',
                                         ]);
                                         $data['barang_id'] = $barangBaru->id;
                                     } else {
@@ -192,13 +202,13 @@ class PembelianResource extends Resource
                                         }
                                     }
 
-                                    unset($data['is_barang_baru'], $data['nama_barang_baru'], $data['rating_baru']);
+                                    unset($data['is_barang_baru'], $data['nama_barang_baru'], $data['rating_baru'], $data['foto_baru']);
 
                                     return $data;
                                 })
                                 // Dipanggil sebelum UPDATE (Edit) — cukup buang field virtual
                                 ->mutateRelationshipDataBeforeSaveUsing(function (array $data): array {
-                                    unset($data['is_barang_baru'], $data['nama_barang_baru'], $data['rating_baru']);
+                                    unset($data['is_barang_baru'], $data['nama_barang_baru'], $data['rating_baru'], $data['foto_baru']);
 
                                     // Pastikan barang_id ada (wajib di tabel)
                                     if (empty($data['barang_id'])) {
